@@ -38,7 +38,7 @@ const GenPDF = () => {
   const doc = new jsPDF();
   const pageWidth = doc.internal.pageSize.width;
   const pageHeight = doc.internal.pageSize.height;
-  const logo = '/vite.PNG'; // Path to your logo
+  const logo = 'publuc/vite.PNG'; // Path to your logo
 
   let y = 50; // Starting y-coordinate after logo
 
