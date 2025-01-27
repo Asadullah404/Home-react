@@ -15,7 +15,7 @@ const Navbar = () => {
           className="flex items-center gap-2 hover:text-gray-200 transition"
         >
           <img
-            src="/vite.PNG" // Replace with your logo path
+            src="/logo.PNG" // Replace with your logo path
             alt="Logo"
             className="h-15 w-30 object-contain"
           />
