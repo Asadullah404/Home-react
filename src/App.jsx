@@ -7,7 +7,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import UserDashboard from "./pages/UserDashboard";
 import Home1 from "./pages/Home1";
 import Cal from "./pages/Cal";
-import Datainc from "./pages/datainc";
+import Datainc from "./pages/Datainc";
 import Genpdf from "./pages/Genpdf";
 import History from "./pages/History";
 import Navbar from "./components/Navbar";
