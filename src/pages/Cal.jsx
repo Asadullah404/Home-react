@@ -105,159 +105,182 @@ const Cal = () => {
   };
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold text-center mb-6">Calculation</h1>
+    <div className="p-6 bg-gray-100 min-h-screen">
+      <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-xl p-8">
+        <h1 className="text-3xl font-bold text-center mb-8 text-blue-600">Calculation Dashboard</h1>
 
-      {/* Fetch Readings Form */}
-      <form onSubmit={fetchReadings} className="space-y-4">
-        <h2 className="text-xl font-bold">Units Used from Date to Date</h2>
-        <label htmlFor="searchMeterId" className="block font-medium">
-          Meter ID:
-        </label>
-        <input
-          type="text"
-          id="searchMeterId"
-          value={searchMeterId}
-          onChange={(e) => setSearchMeterId(e.target.value)}
-          required
-          className="border p-2 rounded w-full"
-        />
-        <button
-          type="submit"
-          className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
-        >
-          Search
-        </button>
-      </form>
-
-      {readings.length > 0 && (
-        <form onSubmit={calculateUnitsUsedFromDateRange} className="space-y-4 mt-4">
-          <label htmlFor="fromReading" className="block font-medium">
-            From:
-          </label>
-          <select
-            id="fromReading"
-            value={fromReading}
-            onChange={(e) => setFromReading(e.target.value)}
-            required
-            className="border p-2 rounded w-full"
-          >
-            {readings.map((reading, index) => (
-              <option key={index} value={reading.reading}>
-                {reading.readingDate}: {reading.reading}
-              </option>
-            ))}
-          </select>
-
-          <label htmlFor="toReading" className="block font-medium">
-            To:
-          </label>
-          <select
-            id="toReading"
-            value={toReading}
-            onChange={(e) => setToReading(e.target.value)}
-            required
-            className="border p-2 rounded w-full"
-          >
-            {readings.map((reading, index) => (
-              <option key={index} value={reading.reading}>
-                {reading.readingDate}: {reading.reading}
-              </option>
-            ))}
-          </select>
+        {/* Fetch Readings Form */}
+        <form onSubmit={fetchReadings} className="space-y-6">
+          <h2 className="text-2xl font-semibold text-gray-700">Units Used from Date to Date</h2>
+          <div>
+            <label htmlFor="searchMeterId" className="block text-lg font-medium text-gray-600">
+              Meter ID:
+            </label>
+            <input
+              type="text"
+              id="searchMeterId"
+              value={searchMeterId}
+              onChange={(e) => setSearchMeterId(e.target.value)}
+              required
+              className="border border-gray-300 p-3 rounded w-full focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            />
+          </div>
           <button
             type="submit"
-            className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700"
+            className="w-full bg-blue-500 text-white py-3 rounded font-medium hover:bg-blue-600 transition duration-300"
+          >
+            Search
+          </button>
+        </form>
+
+        {readings.length > 0 && (
+          <form onSubmit={calculateUnitsUsedFromDateRange} className="space-y-6 mt-6">
+            <div>
+              <label htmlFor="fromReading" className="block text-lg font-medium text-gray-600">
+                From:
+              </label>
+              <select
+                id="fromReading"
+                value={fromReading}
+                onChange={(e) => setFromReading(e.target.value)}
+                required
+                className="border border-gray-300 p-3 rounded w-full focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              >
+                {readings.map((reading, index) => (
+                  <option key={index} value={reading.reading}>
+                    {reading.readingDate}: {reading.reading}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label htmlFor="toReading" className="block text-lg font-medium text-gray-600">
+                To:
+              </label>
+              <select
+                id="toReading"
+                value={toReading}
+                onChange={(e) => setToReading(e.target.value)}
+                required
+                className="border border-gray-300 p-3 rounded w-full focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              >
+                {readings.map((reading, index) => (
+                  <option key={index} value={reading.reading}>
+                    {reading.readingDate}: {reading.reading}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <button
+              type="submit"
+              className="w-full bg-green-500 text-white py-3 rounded font-medium hover:bg-green-600 transition duration-300"
+            >
+              Calculate
+            </button>
+          </form>
+        )}
+        {dateRangeResult && (
+          <p className="text-lg text-green-600 mt-4 text-center">{dateRangeResult}</p>
+        )}
+
+        {/* Units Consumption Form */}
+        <form onSubmit={calculateUnits} className="space-y-6 mt-10">
+          <h2 className="text-2xl font-semibold text-gray-700">Units Consumption Per Day & Total Units</h2>
+          <div>
+            <label htmlFor="prevReading" className="block text-lg font-medium text-gray-600">
+              Previous Reading:
+            </label>
+            <input
+              type="number"
+              id="prevReading"
+              value={prevReading}
+              onChange={(e) => setPrevReading(e.target.value)}
+              required
+              className="border border-gray-300 p-3 rounded w-full focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            />
+          </div>
+          <div>
+            <label htmlFor="currReading" className="block text-lg font-medium text-gray-600">
+              Current Reading:
+            </label>
+            <input
+              type="number"
+              id="currReading"
+              value={currReading}
+              onChange={(e) => setCurrReading(e.target.value)}
+              required
+              className="border border-gray-300 p-3 rounded w-full focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            />
+          </div>
+          <div>
+            <label htmlFor="readingPeriod" className="block text-lg font-medium text-gray-600">
+              Reading Period:
+            </label>
+            <select
+              id="readingPeriod"
+              value={readingPeriod}
+              onChange={(e) => setReadingPeriod(e.target.value)}
+              required
+              className="border border-gray-300 p-3 rounded w-full focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            >
+              <option value="Inst">Instant</option>
+              <option value="week">Week</option>
+              <option value="month">Month</option>
+            </select>
+          </div>
+          <button
+            type="submit"
+            className="w-full bg-blue-500 text-white py-3 rounded font-medium hover:bg-blue-600 transition duration-300"
           >
             Calculate
           </button>
         </form>
-      )}
-      {dateRangeResult && <p className="text-lg text-green-600 mt-4">{dateRangeResult}</p>}
+        {unitsResult && (
+          <p className="text-lg text-green-600 mt-4 text-center">{unitsResult}</p>
+        )}
 
-      {/* Units Consumption Form */}
-      <form onSubmit={calculateUnits} className="space-y-4 mt-8">
-        <h2 className="text-xl font-bold">Units Consumption Per Day & Total Units</h2>
-        <label htmlFor="prevReading" className="block font-medium">
-          Previous Reading:
-        </label>
-        <input
-          type="number"
-          id="prevReading"
-          value={prevReading}
-          onChange={(e) => setPrevReading(e.target.value)}
-          required
-          className="border p-2 rounded w-full"
-        />
-        <label htmlFor="currReading" className="block font-medium">
-          Current Reading:
-        </label>
-        <input
-          type="number"
-          id="currReading"
-          value={currReading}
-          onChange={(e) => setCurrReading(e.target.value)}
-          required
-          className="border p-2 rounded w-full"
-        />
-        <label htmlFor="readingPeriod" className="block font-medium">
-          Reading Period:
-        </label>
-        <select
-          id="readingPeriod"
-          value={readingPeriod}
-          onChange={(e) => setReadingPeriod(e.target.value)}
-          required
-          className="border p-2 rounded w-full"
-        >
-          <option value="Inst">Inst</option>
-          <option value="week">Week</option>
-          <option value="month">Month</option>
-        </select>
-        <button
-          type="submit"
-          className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
-        >
-          Calculate
-        </button>
-      </form>
-      {unitsResult && <p className="text-lg text-green-600 mt-4">{unitsResult}</p>}
-
-      {/* Watt-Hour Calculation Form */}
-      <form onSubmit={calculateUnitsByWattHour} className="space-y-4 mt-8">
-        <h2 className="text-xl font-bold">Units by Watt * Hour</h2>
-        <label htmlFor="watts" className="block font-medium">
-          Watts:
-        </label>
-        <input
-          type="number"
-          id="watts"
-          value={watts}
-          onChange={(e) => setWatts(e.target.value)}
-          required
-          className="border p-2 rounded w-full"
-        />
-        <label htmlFor="hours" className="block font-medium">
-          Hours:
-        </label>
-        <input
-          type="number"
-          id="hours"
-          value={hours}
-          onChange={(e) => setHours(e.target.value)}
-          required
-          className="border p-2 rounded w-full"
-        />
-        <button
-          type="submit"
-          className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700"
-        >
-          Calculate
-        </button>
-      </form>
-      {wattHourResult && (
-        <p className="text-lg text-green-600 mt-4">{wattHourResult}</p>
-      )}
+        {/* Watt-Hour Calculation Form */}
+        <form onSubmit={calculateUnitsByWattHour} className="space-y-6 mt-10">
+          <h2 className="text-2xl font-semibold text-gray-700">Units by Watt * Hour</h2>
+          <div>
+            <label htmlFor="watts" className="block text-lg font-medium text-gray-600">
+              Watts:
+            </label>
+            <input
+              type="number"
+              id="watts              "
+              value={watts}
+              onChange={(e) => setWatts(e.target.value)}
+              required
+              className="border border-gray-300 p-3 rounded w-full focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            />
+          </div>
+          <div>
+            <label htmlFor="hours" className="block text-lg font-medium text-gray-600">
+              Hours:
+            </label>
+            <input
+              type="number"
+              id="hours"
+              value={hours}
+              onChange={(e) => setHours(e.target.value)}
+              required
+              className="border border-gray-300 p-3 rounded w-full focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            />
+          </div>
+          <button
+            type="submit"
+            className="w-full bg-blue-500 text-white py-3 rounded font-medium hover:bg-blue-600 transition duration-300"
+          >
+            Calculate
+          </button>
+        </form>
+        {wattHourResult && (
+          <p className="text-lg text-green-600 mt-4 text-center">{wattHourResult}</p>
+        )}
+      </div>
     </div>
   );
 };

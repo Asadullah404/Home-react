@@ -27,7 +27,7 @@ const GenPDF = () => {
 
   // Generate PDF
  // Generate PDF
-const generatePDF = async (e) => {
+ const generatePDF = async (e) => {
   e.preventDefault();
 
   if (!fromDate || !toDate || selectedMeterIds.length === 0) {
@@ -36,11 +36,19 @@ const generatePDF = async (e) => {
   }
 
   const doc = new jsPDF();
-  let y = 40; // Adjusted starting position to make space for the logo
+  const pageWidth = doc.internal.pageSize.width;
+  const pageHeight = doc.internal.pageSize.height;
+  const logo = '/public/logo.PNG'; // Path to your logo
 
-  // Add a logo to the PDF
-  const logo = 'data:image/png;base64,<your-base64-image-here>'; // Replace with your logo Base64 or import it
-  doc.addImage(logo, 'PNG', 10, 10, 50, 30); // x=10, y=10, width=50, height=30
+  let y = 50; // Starting y-coordinate after logo
+
+  // Function to add the logo on every page
+  const addHeaderLogo = () => {
+    doc.addImage(logo, 'PNG', pageWidth / 2 - 25, 10, 50, 30); // Center logo (50x30)
+  };
+
+  // Add logo to the first page
+  addHeaderLogo();
 
   const readingsRef = collection(db, 'readings');
   const q = query(
@@ -59,26 +67,38 @@ const generatePDF = async (e) => {
   });
 
   Object.keys(readingsByMeter).forEach((meterId) => {
-    if (y + 20 > doc.internal.pageSize.height) {
+    if (y + 20 > pageHeight - 20) {
       doc.addPage();
-      y = 40; // Adjusted for the logo on new pages
+      addHeaderLogo(); // Add logo to the new page
+      y = 50; // Reset y-coordinate for the new page
     }
     doc.text(`Meter ID: ${meterId}`, 20, y);
     y += 10;
 
-    let tableData = readingsByMeter[meterId].map((reading) => {
-      let readingDate = new Date(reading.readingDate);
-      return [readingDate.toDateString(), reading.reading];
-    });
+    let tableData = readingsByMeter[meterId]
+      .filter((reading) => {
+        const readingDate = new Date(reading.readingDate);
+        return (
+          readingDate >= new Date(fromDate) && readingDate <= new Date(toDate)
+        );
+      })
+      .map((reading) => {
+        let readingDate = new Date(reading.readingDate);
+        return [readingDate.toDateString(), reading.reading];
+      });
 
-    doc.autoTable({
-      head: [['Date', 'Reading']],
-      body: tableData,
-      startY: y,
-      theme: 'striped',
-    });
-
-    y = doc.autoTable.previous.finalY + 10;
+    if (tableData.length === 0) {
+      doc.text("No readings available for the selected date range.", 20, y);
+      y += 10;
+    } else {
+      doc.autoTable({
+        head: [['Date', 'Reading']],
+        body: tableData,
+        startY: y,
+        theme: 'striped',
+      });
+      y = doc.autoTable.previous.finalY + 10;
+    }
   });
 
   doc.save('readings_report.pdf');
